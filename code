@@ -1,0 +1,122 @@
+// C++ code
+//
+
+int trigPin=7;
+
+int echoPinD=6;
+int echoPinL=5;
+int echoPinF=4;
+int echoPinR=3;
+int echoPinB=2;
+
+int LED = 8;
+
+// defines variables
+long durationD; // variable for the duration of sound wave travel
+long durationL; // variable for the duration of sound wave travel
+long durationF; // variable for the duration of sound wave travel
+long durationR; // variable for the duration of sound wave travel
+long durationB; // variable for the duration of sound wave travel
+
+int distanceD; // variable for the distance measurement
+int distanceL; // variable for the distance measurement
+int distanceF; // variable for the distance measurement
+int distanceR; // variable for the distance measurement
+int distanceB; // variable for the distance measurement
+
+void setup() {
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(echoPinD, INPUT); // Sets the echoPin as an INPUT
+  pinMode(8, OUTPUT);
+  Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
+  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
+  Serial.println("with Arduino UNO R3");
+}
+void loop() {
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationD = pulseIn(echoPinD, HIGH);
+  // Calculating the distance
+  distanceD = (durationD/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("DistanceD: ");
+  Serial.print(distanceD);
+  Serial.println(" cm");
+ 
+  if (distanceD <30) {
+    digitalWrite(8, HIGH);   
+  delay(1000);              
+  digitalWrite(8, LOW);   
+  delay(1000);   
+  }
+ 
+    // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationL = pulseIn(echoPinL, HIGH);
+  // Calculating the distance
+  distanceL = (durationL/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("DistanceL: ");
+  Serial.print(distanceL);
+  Serial.println(" cm");
+  
+    // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationF = pulseIn(echoPinF, HIGH);
+  // Calculating the distance
+  distanceF = (durationF/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("DistanceF: ");
+  Serial.print(distanceF);
+  Serial.println(" cm");
+  
+    // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationR = pulseIn(echoPinR, HIGH);
+  // Calculating the distance
+  distanceR = (durationR/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("DistanceR: ");
+  Serial.print(distanceR);
+  Serial.println(" cm");
+  
+    // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationB = pulseIn(echoPinB, HIGH);
+  // Calculating the distance
+  distanceB = (durationB/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("DistanceB: ");
+  Serial.print(distanceB);
+  Serial.println(" cm");
+}
