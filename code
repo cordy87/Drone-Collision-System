@@ -1,5 +1,14 @@
 // C++ code
 //
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+//create an RF24 object
+RF24 radio(10, 9);  // CE, CSN
+
+//address through which two modules communicate.
+const byte address[6] = "00001";
 
 int trigPin=7;
 
@@ -8,8 +17,6 @@ int echoPinL=5;
 int echoPinF=4;
 int echoPinR=3;
 int echoPinB=2;
-
-int LED = 8;
 
 // defines variables
 long durationD; // variable for the duration of sound wave travel
@@ -27,12 +34,143 @@ int distanceB; // variable for the distance measurement
 void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
   pinMode(echoPinD, INPUT); // Sets the echoPin as an INPUT
-  pinMode(8, OUTPUT);
+  pinMode(echoPinL, INPUT); // Sets the echoPin as an INPUT
+  pinMode(echoPinF, INPUT); // Sets the echoPin as an INPUT
+  pinMode(echoPinR, INPUT); // Sets the echoPin as an INPUT
+  pinMode(echoPinB, INPUT); // Sets the echoPin as an INPUT
   Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
-  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
-  Serial.println("with Arduino UNO R3");
+  //Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
+  //Serial.println("with Arduino UNO R3");
+  
+  //Transmitter Setup
+  radio.begin();
+    //set the address
+  radio.openWritingPipe(address);
+    //Set module as transmitter
+  radio.stopListening();
 }
 void loop() {
+  //********************************Front******************************
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationF = pulseIn(echoPinF, HIGH);
+  // Calculating the distance
+  distanceF = (durationF/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+ 
+  if (distanceF < 300) {
+	const char text[] = "FClose";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceF < 350){
+    const char text[] = "FClosish";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceF < 400){
+    const char text[] = "FFar";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  
+  //********************************Left******************************
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationL = pulseIn(echoPinL, HIGH);
+  // Calculating the distance
+  distanceL = (durationL/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+ 
+  if (distanceL < 300) {
+	const char text[] = "LClose";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceL < 350){
+    const char text[] = "LClosish";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceL < 400){
+    const char text[] = "LFar";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  
+  //********************************Right******************************
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationR = pulseIn(echoPinR, HIGH);
+  // Calculating the distance
+  distanceR = (durationR/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+ 
+  if (distanceR < 300) {
+	const char text[] = "RClose";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceR < 350){
+    const char text[] = "RClosish";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceR < 400){
+    const char text[] = "RFar";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+     
+  //********************************Back******************************
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  durationB = pulseIn(echoPinB, HIGH);
+  // Calculating the distance
+  distanceB = (durationB/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+ 
+  if (distanceB < 300) {
+	const char text[] = "BClose";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceB < 350){
+    const char text[] = "BClosish";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceB < 400){
+    const char text[] = "BFar";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  
+  //********************************Down******************************
   // Clears the trigPin condition
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -45,78 +183,20 @@ void loop() {
   // Calculating the distance
   distanceD = (durationD/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
   // Displays the distance on the Serial Monitor
-  Serial.print("DistanceD: ");
-  Serial.print(distanceD);
-  Serial.println(" cm");
  
-  if (distanceD <30) {
-    digitalWrite(8, HIGH);   
-  delay(1000);              
-  digitalWrite(8, LOW);   
-  delay(1000);   
+  if (distanceD < 300) {
+	const char text[] = "DClose";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
   }
- 
-    // Clears the trigPin condition
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  durationL = pulseIn(echoPinL, HIGH);
-  // Calculating the distance
-  distanceL = (durationL/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("DistanceL: ");
-  Serial.print(distanceL);
-  Serial.println(" cm");
-  
-    // Clears the trigPin condition
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  durationF = pulseIn(echoPinF, HIGH);
-  // Calculating the distance
-  distanceF = (durationF/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("DistanceF: ");
-  Serial.print(distanceF);
-  Serial.println(" cm");
-  
-    // Clears the trigPin condition
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  durationR = pulseIn(echoPinR, HIGH);
-  // Calculating the distance
-  distanceR = (durationR/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("DistanceR: ");
-  Serial.print(distanceR);
-  Serial.println(" cm");
-  
-    // Clears the trigPin condition
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  durationB = pulseIn(echoPinB, HIGH);
-  // Calculating the distance
-  distanceB = (durationB/2) / 29.1; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("DistanceB: ");
-  Serial.print(distanceB);
-  Serial.println(" cm");
+  else if (distanceD < 350){
+    const char text[] = "DClosish";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
+  else if (distanceD < 400){
+    const char text[] = "DFar";
+  	radio.write(&text, sizeof(text));
+    delay(1000);
+  }
 }
